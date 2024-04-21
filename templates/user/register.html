@@ -1,0 +1,137 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    registration
+{% endblock %}
+
+{% block content %}
+    <main>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="card shadow-lg border-0 rounded-lg mt-5">
+                        <div class="card-header"><h3 class="text-center font-weight-light my-4">Create Account</h3></div>
+                        <div class="card-body">
+                            <form method="post" action="{% url 'register' %}" id="register_form">
+                                {% include 'user/messages.html' %}
+                                {% csrf_token %}
+                                {% include 'base/errors.html' %}
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3 mb-md-0">
+                                            <input class="form-control" id="inputFirstName" value="{{form.first_name.value|default_if_none:''}}" name="first_name" type="text" placeholder="Enter your first name" />
+                                            <label for="inputFirstName">First name</label>
+                                            <div id="first_name_validation" style="transition: .3s;" class="text-danger"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input class="form-control" id="inputLastName" value="{{form.last_name.value|default_if_none:''}}" name="last_name" type="text" placeholder="Enter your last name" />
+                                            <label for="inputLastName">Last name</label>
+                                            <div id="last_name_validation" style="transition: .3s;" class="text-danger"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input class="form-control" id="inputEmail" type="email" value="{{form.email.value|default_if_none:''}}" name="email" placeholder="name@example.com" />
+                                    <label for="inputEmail">Email address</label>
+                                    <div id="email_validation" style="transition: .3s;" class="text-danger"></div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3 mb-md-0">
+                                            <input class="form-control" id="inputPassword" type="password" name="password" placeholder="Create a password" />
+                                            <label for="inputPassword">Password</label>
+                                            <div id="password1_validation" style="transition: .3s;" class="text-danger"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3 mb-md-0">
+                                            <input class="form-control" id="inputPasswordConfirm" type="password"  placeholder="Confirm password" />
+                                            <label for="inputPasswordConfirm">Confirm Password</label>
+                                            <div id="password2_validation" style="transition: .3s;" class="text-danger"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 mb-0">
+                                    <div class="d-grid"><button class="btn btn-primary btn-block" type="submit">Create Account</button></div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-footer text-center py-3">
+                            <div class="small"><a href="{% url 'login' %}">Have an account? Go to login</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        document.getElementById('register_form').addEventListener('submit', function(event) {
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            // Clear previous error messages
+            document.getElementById('first_name_validation').innerHTML = '';
+            document.getElementById('last_name_validation').innerHTML = '';
+            document.getElementById('email_validation').innerHTML = '';
+            document.getElementById('password1_validation').innerHTML = '';
+            document.getElementById('password2_validation').innerHTML = '';
+
+            document.getElementById('inputFirstName').classList.remove('border-danger');
+            document.getElementById('inputLastName').classList.remove('border-danger');
+            document.getElementById('inputEmail').classList.remove('border-danger');
+            document.getElementById('inputPassword').classList.remove('border-danger');
+            document.getElementById('inputPasswordConfirm').classList.remove('border-danger');
+                        
+            // Get form values
+            var firstName = document.getElementById('inputFirstName').value;
+            var lastName = document.getElementById('inputLastName').value;
+            var email = document.getElementById('inputEmail').value;
+            var password = document.getElementById('inputPassword').value;
+            var confirmPassword = document.getElementById('inputPasswordConfirm').value;
+
+            // Validate firstName
+            if (firstName.trim() === ''){
+                document.getElementById('first_name_validation').innerHTML = 'firstName is required !';
+                document.getElementById('inputFirstName').classList.add('border-danger')
+                event.preventDefault() // Prevent form submission
+            }
+
+            // Validate lastName
+            if (lastName.trim() === ''){
+                document.getElementById('last_name_validation').innerHTML = 'lastName is required !';
+                document.getElementById('inputLastName').classList.add('border-danger')
+                event.preventDefault() // Prevent form submission
+            }
+
+            // Validate email
+            if (email.trim() === ''){
+                document.getElementById('email_validation').innerHTML = 'email is required !';
+                document.getElementById('inputEmail').classList.add('border-danger')
+                event.preventDefault() // Prevent form submission
+            }
+
+            if (! emailRegex.test(email.trim())){
+                document.getElementById('email_validation').innerHTML = 'email must use format example@example.com';
+                document.getElementById('inputEmail').classList.add('border-danger')
+                event.preventDefault() // Prevent form submission
+            }
+
+            // Validate password
+            if (password.trim() === '' || confirmPassword.trim() === ''){
+                document.getElementById('password1_validation').innerHTML = 'password is required !';
+                document.getElementById('password2_validation').innerHTML = 'password is required !';
+                document.getElementById('inputPassword').classList.add('border-danger')
+                document.getElementById('inputPasswordConfirm').classList.add('border-danger')
+                event.preventDefault() // Prevent form submission
+            }
+
+            if (password.trim() != confirmPassword.trim()){
+                document.getElementById('password1_validation').innerHTML = 'passwords not matches !';
+                document.getElementById('inputPassword').classList.add('border-danger')
+                document.getElementById('inputPasswordConfirm').classList.add('border-danger')
+                event.preventDefault() // Prevent form submission
+            }
+        });
+    </script>
+{% endblock %}

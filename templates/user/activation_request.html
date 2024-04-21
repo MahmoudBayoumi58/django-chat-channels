@@ -1,0 +1,54 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}
+    Activation
+{% endblock %}
+
+{% block content %}
+    <main>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5">
+                    <div class="card shadow-lg border-0 rounded-lg mt-5">
+                        <div class="card-header"><h3 class="text-center font-weight-light my-4">Send Activation Email</h3></div>
+                        <div class="card-body">
+                            <form id="activation_form" method="post" action="{% url 'send_activation_view' %}">
+                                {% csrf_token %}
+                                {% include 'user/messages.html' %}
+                                <div class="form-floating mb-3">
+                                    <input class="form-control" id="inputEmail" type="email" name="email" placeholder="name@example.com" />
+                                    <label for="inputEmail">Email address</label>
+                                    <div id="email_validation" style="transition: .3s;" class="text-danger"></div>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                                    <a class="small" href="{% url 'login' %}">Return to login</a>
+                                    <button class="btn btn-primary" type="submit">Send</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-footer text-center py-3">
+                            <div class="small"><a href="{% url 'register' %}">Need an account? Sign up!</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        document.getElementById('activation_form').addEventListener('submit', function(event) {
+            // Clear previous error messages
+            document.getElementById('email_validation').innerHTML = '';
+            document.getElementById('inputEmail').classList.remove('border-danger');
+
+            // Get form values
+            var email = document.getElementById('inputEmail').value;
+
+            // Validate email
+            if (email.trim() === ''){
+                document.getElementById('email_validation').innerHTML = 'email is required !';
+                document.getElementById('inputEmail').classList.add('border-danger')
+                event.preventDefault() // Prevent form submission
+            }
+        });
+    </script>
+{% endblock %}
