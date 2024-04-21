@@ -3,7 +3,7 @@ __pycache__
 .idea/
 media/**
 *.sqlite3
-/migration/migrations/*.py
-/migration/migrations/*.pyc
+/migration/migrations/*
+!/migration/migrations/__init__.py
 
 
